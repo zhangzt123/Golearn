@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	redis "github.com/go-redis/redis/v7" //redis
-	//消息转换
+	redis "github.com/go-redis/redis/v7"
+	// msgpack "github.com/vmihailenco/msgpack/v4" //消息转换
 )
 
 var client *redis.Client
@@ -33,6 +33,8 @@ func init() {
 // }
 
 func main() {
+
+	//----------------------------------------------------------------------------------
 
 	//String
 
@@ -112,8 +114,38 @@ func main() {
 
 	//------------------------------------------------------------------------------------------
 
-	//set集和
-	client.Set()
+	//set集合
+	// ic := client.SAdd("setkey", 1, 2, 3)
+	// i, _ := ic.Result()
+	// fmt.Printf("set ‘setkey’ %v 条", i)
+
+	// slices := client.SMembers("setkey")
+	// str, _ := slices.Result()
+	// fmt.Println(str)
+	// for _, v := range str {
+	// 	fmt.Println(v)
+	// }
+
+	//--------------------------------------------------------------------------------------------
+
+	//zset集合
+	// ICmd := client.ZAdd("zsetkey", &redis.Z{Score: 0, Member: "zhangsan"}, &redis.Z{Score: 1, Member: "lisi"}, &redis.Z{Score: 2, Member: "wangwu"})
+	// v, _ := ICmd.Result()
+	// fmt.Print(v)
+	//
+
+	//----------------------------------------------------------------------------------------------
+
+	//lua脚本
+
+	cmd := client.Eval("return redis.call('set',KEYS[1],'bar')", []string{"evalkey"})
+	c, e := cmd.Result()
+	if e != nil {
+		fmt.Println(e)
+	} else {
+		fmt.Println(c)
+	}
+
 }
 
 var stack string = "stack"
