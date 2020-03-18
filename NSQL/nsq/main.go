@@ -13,10 +13,10 @@ sudo docker run -d --name nsqd   -p 4150:4150 -p 4151:4151 \
 
 sudo docker run -d --name nsqadmin  -p 4171:4171 \
     nsqio/nsq:v1.2.0 /nsqadmin \
-    --lookupd-http-address=192.168.118.129:4161 
-	
+    --lookupd-http-address=192.168.118.129:4161
+
 记得关闭防火墙 路由找不到
-	
+
 */
 
 package main
@@ -30,67 +30,63 @@ import (
 	nsq "github.com/nsqio/go-nsq"
 )
 
+var conf *nsq.Config
 
-	var conf *nsq.Config
+var sw sync.WaitGroup
 
-	var sw sync.WaitGroup
+var err error
 
-	var err error
-
-	var rec =func(){
-		if er:=recover();er != nil{
-			fmt.Printf("发生panic： %v",er)
-		}
+var rec = func() {
+	if er := recover(); er != nil {
+		fmt.Printf("发生panic： %v", er)
 	}
-	type customerMessageHandler struct {}
+}
+
+type customerMessageHandler struct {
+	str string
+}
 
 //初始化
-func init(){
+func init() {
 	conf = nsq.NewConfig()
-	
-}
 
+}
 
 func main() {
-	//生产者消费者 topic 
+	//生产者消费者 topic
 	sw.Add(4)
 	go producer()
-	go customer()
-	go customer()
-	go customer()
+	go customer("1")
+	go customer("2")
+	go customer("3")
 	sw.Wait()
-
 
 }
 
-
-func(c *customerMessageHandler)HandleMessage(message *nsq.Message) error{
+func (c *customerMessageHandler) HandleMessage(message *nsq.Message) error {
 	defer time.Sleep(1 * time.Second)
 	if len(message.Body) == 0 {
 		return nil
-	} 
-		fmt.Println("消费消息："+string(message.Body))	
-		return nil
-		defer
+	}
+	fmt.Println("消费者" + c.str + "消费消息：" + string(message.Body))
+	return nil
 }
-
-func(c *customerMessageHandler)pri(){
-	
-}
-
 
 //消费者
-func customer(){
+func customer(s string) {
 	defer sw.Done()
 	defer rec()
 	//192.168.118.129:4161
-	customer,err:= nsq.NewConsumer("topic","chan1",conf)
+	//customer,err:= nsq.NewConsumer("topic","chan1",conf)
+
+	customer, err := nsq.NewConsumer("topic", s, conf)
+	//消费者使用同一个channal时可以作为队列使用  使用不同的管道时 即发布订阅模式 每个goroutine都会处理相同个数的消息
 	if err != nil {
 		panic(err)
 	}
-	 customer.AddHandler(&customerMessageHandler{})
-	 err =customer.ConnectToNSQLookupds([]string{"192.168.118.129:4161"})
-	 if err != nil {
+	customer.AddHandler(&customerMessageHandler{str: s})
+	err = customer.ConnectToNSQLookupds([]string{"192.168.118.129:4161"})
+	if err != nil {
 		panic(err)
 	}
 	fmt.Println("连接NSQLookupd")
@@ -101,25 +97,23 @@ func customer(){
 }
 
 //生产者
-func producer(){
+func producer() {
 	defer sw.Done()
 	defer rec()
 	//生产者 连接 nsqd
-	prod,err:= nsq.NewProducer("192.168.118.129:4150",conf)
+	prod, err := nsq.NewProducer("192.168.118.129:4150", conf)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("连接nsqd")
 	for i := 0; i < 100; i++ {
-	err =	prod.Publish("topic",[]byte(strconv.Itoa(i)))
-	if err != nil {
-		panic(err)
-	}
+		err = prod.Publish("topic", []byte(strconv.Itoa(i)))
+		if err != nil {
+			panic(err)
+		}
 	}
 	fmt.Println("生产100个消息")
-	 prod.Stop()
-	 fmt.Println("生产消息完成 ")
-
-	
+	prod.Stop()
+	fmt.Println("生产消息完成 ")
 
 }
