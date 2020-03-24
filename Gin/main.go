@@ -12,24 +12,31 @@ var err error
 func init() {
 	gin.SetMode(gin.DebugMode)
 	engine = gin.Default()
-	mp := api.Mygroup
-	for k, v := range mp {
-		groupRoute := engine.Group(string(k))
-		switch v.Httppool {
-		case api.GET:
-			groupRoute.GET(v.Apiname, v.Handlers)
-		case api.POST:
-			groupRoute.POST(v.Apiname, v.Handlers)
-		case api.PUT:
-			groupRoute.PUT(v.Apiname, v.Handlers)
-		case api.DELETE:
-			groupRoute.DELETE(v.Apiname, v.Handlers)
-		case api.PATCH:
-			groupRoute.PATCH(v.Apiname, v.Handlers)
-		case api.Any:
-			groupRoute.Any(v.Apiname, v.Handlers)
-		default:
-			groupRoute.Any(v.Apiname, v.Handlers)
+	engine.Use()
+	//api.Register(regfun)
+	api.Register(regfun)
+}
+
+var regfun = func(grouptypes []*api.Grouptype) {
+	for _, grouptype := range grouptypes {
+		groupRoute := engine.Group(grouptype.Group)
+		for _, sub := range grouptype.Subgrouptypes {
+			switch sub.Httptype {
+			case api.GET:
+				groupRoute.GET(sub.Subgroup, sub.Handler)
+			case api.POST:
+				groupRoute.POST(sub.Subgroup, sub.Handler)
+			case api.PUT:
+				groupRoute.PUT(sub.Subgroup, sub.Handler)
+			case api.DELETE:
+				groupRoute.DELETE(sub.Subgroup, sub.Handler)
+			case api.PATCH:
+				groupRoute.PATCH(sub.Subgroup, sub.Handler)
+			case api.Any:
+				groupRoute.Any(sub.Subgroup, sub.Handler)
+			default:
+				groupRoute.Any(sub.Subgroup, sub.Handler)
+			}
 		}
 	}
 

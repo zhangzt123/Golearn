@@ -20,6 +20,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.14.3 // indirect
+	github.com/jinzhu/gorm v1.9.12
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/nsqio/go-nsq v1.0.8
 	github.com/prometheus/client_golang v1.5.1 // indirect
@@ -27,7 +28,7 @@ require (
 	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20200122045848-3419fae592fc // indirect
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
-	go.etcd.io/bbolt v1.3.4 // indirect
+	//go.etcd.io/bbolt v1.3.4 // indirect
 	go.uber.org/zap v1.14.1 // indirect
 	golang.org/x/crypto v0.0.0-20200320181102-891825fb96df // indirect
 	golang.org/x/net v0.0.0-20200202094626-16171245cfb2

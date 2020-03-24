@@ -9,11 +9,11 @@ import (
 	"github.com/zhangzt123/Golearn/Gin/api/v1"
 )
 
-type reqtype int
+type Reqtype int
 
 //
 const (
-	GET reqtype = iota
+	GET Reqtype = iota
 	POST
 	PUT
 	DELETE
@@ -22,17 +22,29 @@ const (
 	PATCH
 )
 
-type GroupV struct {
-	Apiname  string
-	Httppool reqtype
-	Handlers gin.HandlerFunc
+type Subgrouptype struct {
+	Subgroup string
+	Httptype Reqtype
+	Handler  gin.HandlerFunc
 }
 
-type k string
+type Grouptype struct {
+	Group         string
+	Subgrouptypes []Subgrouptype
+}
 
-var Mygroup = make(map[k]*GroupV)
-
-func init() {
-	Mygroup["/v1"] = &GroupV{Apiname: "/GetName/:name", Httppool: GET, Handlers: v1.Gethelloworld}
+func Register(fun func(group []*Grouptype)) {
+	k := []*Grouptype{
+		&Grouptype{
+			Group: "/v1",
+			Subgrouptypes: []Subgrouptype{
+				Subgrouptype{Subgroup: "/GetName/:name", Httptype: GET, Handler: v1.Gethelloworld},
+				Subgrouptype{Subgroup: "/FindAllUser", Httptype: GET, Handler: v1.FindAllUser} /**/}},
+		&Grouptype{
+			Group: "/v1",
+			Subgrouptypes: []Subgrouptype{
+				Subgrouptype{Subgroup: "/GetName/:name", Httptype: GET, Handler: v1.Gethelloworld},
+				Subgrouptype{Subgroup: "/FindAllUser", Httptype: GET, Handler: v1.FindAllUser} /**/}} /**/}
+	fun(k)
 
 }
