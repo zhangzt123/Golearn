@@ -35,16 +35,11 @@ type Grouptype struct {
 
 func Register(fun func(group []*Grouptype)) {
 	k := []*Grouptype{
-		&Grouptype{
+		{
 			Group: "/v1",
 			Subgrouptypes: []Subgrouptype{
-				Subgrouptype{Subgroup: "/GetName/:name", Httptype: GET, Handler: v1.Gethelloworld},
-				Subgrouptype{Subgroup: "/FindAllUser", Httptype: GET, Handler: v1.FindAllUser} /**/}},
-		&Grouptype{
-			Group: "/v1",
-			Subgrouptypes: []Subgrouptype{
-				Subgrouptype{Subgroup: "/GetName/:name", Httptype: GET, Handler: v1.Gethelloworld},
-				Subgrouptype{Subgroup: "/FindAllUser", Httptype: GET, Handler: v1.FindAllUser} /**/}} /**/}
+				{Subgroup: "/GetName/:name", Httptype: GET, Handler: v1.Gethelloworld},
+				{Subgroup: "/FindAllUser", Httptype: GET, Handler: v1.FindAllUser} /**/}}}
 	fun(k)
 
 }

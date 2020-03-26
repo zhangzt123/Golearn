@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/zhangzt123/Golearn/Gin/api"
-	_ "github.com/zhangzt123/Golearn/Gin/conf"
+	c "github.com/zhangzt123/Golearn/Gin/conf"
 )
 
 var engine *gin.Engine
@@ -12,7 +12,6 @@ var err error
 func init() {
 	gin.SetMode(gin.DebugMode)
 	engine = gin.Default()
-	engine.Use()
 	//api.Register(regfun)
 	api.Register(regfun)
 }
@@ -44,7 +43,7 @@ var regfun = func(grouptypes []*api.Grouptype) {
 
 func main() {
 
-	err = engine.Run(":8080")
+	err = engine.Run(c.Conf.GetString("server.address"))
 	if err != nil {
 		//todo
 	}

@@ -1,0 +1,23 @@
+#server config
+server:
+    #ip:port
+    address: localhost:8080
+#datasource config
+db:
+  #
+  dsn: zzt:Zzt=123456@tcp(192.168.118.130:3306)/nacosdb?charset=utf8&parseTime=True&loc=Local
+  #设置做大连接时间
+  maxLifetime: 1000
+  #最大闲置连接数
+  maxIdleConns: 10
+  #最大连接数
+  maxOpenConns: 100
+#redis config
+redis:
+  #ip:port
+  addr: 192.168.118.129:6379
+  db: 0
+
+#Nsq
+nsq:
+  addr: 192.168.118.129:6379

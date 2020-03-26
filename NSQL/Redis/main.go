@@ -1,4 +1,5 @@
 /**go 连接redis
+*docker run --name redis -d -p 6379:6379 redis:5.0.7
 **/
 
 package main

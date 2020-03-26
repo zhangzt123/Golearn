@@ -3,7 +3,7 @@ package Repository
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"github.com/zhangzt123/Golearn/Gin/Repository/datasource"
+	"github.com/zhangzt123/Golearn/Gin/conf/datasource"
 	"github.com/zhangzt123/Golearn/Gin/entity"
 )
 
